@@ -11,9 +11,6 @@ on:
 jobs:
   build:
     name: Build
-    defaults:
-      run:
-        working-directory: wow
     runs-on: ubuntu-latest
 
     steps:
@@ -38,13 +35,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: production-files
-          path: /wow/build/
+          path: ./build
 
   deploy:
     name: Deploy
-    defaults:
-      run:
-        working-directory: wow
     needs: build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
@@ -54,10 +48,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: production-files
-          path: /wow/build
+          path: ./build
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: /wow/build
+          publish_dir: ./build
